@@ -1,14 +1,14 @@
-import { Form, useLoaderData } from "@remix-run/react";
-import { json, LoaderArgs } from "@remix-run/server-runtime";
-import { z } from "zod";
-import { zx } from "../../../src";
+import { Form, useLoaderData } from 'react-router';
+import { z } from 'zod';
+import { zx } from '../../../src';
+import type { Route } from './+types';
 
-export async function loader(args: LoaderArgs) {
+export async function loader(args: Route.ClientLoaderArgs) {
   const { query } = zx.parseQuery(args.request, {
     query: z.string().optional(),
   });
   const results = query ? searchAnimals(query) : [];
-  return json({ query, results });
+  return { query, results };
 }
 
 export default function Search() {
@@ -36,27 +36,27 @@ export default function Search() {
 
 function searchAnimals(query: string) {
   return [
-    "dog",
-    "cat",
-    "bird",
-    "fish",
-    "whale",
-    "dolphin",
-    "shark",
-    "tiger",
-    "lion",
-    "elephant",
-    "giraffe",
-    "zebra",
-    "horse",
-    "cow",
-    "pig",
-    "chicken",
-    "duck",
-    "goose",
-    "frog",
-    "snake",
-    "lizard",
-    "turtle",
+    'dog',
+    'cat',
+    'bird',
+    'fish',
+    'whale',
+    'dolphin',
+    'shark',
+    'tiger',
+    'lion',
+    'elephant',
+    'giraffe',
+    'zebra',
+    'horse',
+    'cow',
+    'pig',
+    'chicken',
+    'duck',
+    'goose',
+    'frog',
+    'snake',
+    'lizard',
+    'turtle',
   ].filter((animal) => animal.includes(query));
 }

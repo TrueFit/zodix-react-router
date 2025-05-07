@@ -1,8 +1,8 @@
-import { Link } from "@remix-run/react";
+import { Link } from 'react-router';
 
 export default function Index() {
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
+    <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4' }}>
       <h1>Zodix Examples</h1>
       <ul>
         <li>

@@ -1,7 +1,7 @@
 {
   "name": "zodix",
   "version": "0.4.4",
-  "description": "Parse Remix loaders and actions with Zod",
+  "description": "Parse React Router loaders and actions with Zod",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -16,7 +16,7 @@
   "private": false,
   "scripts": {
     "build": "node build.js && tsc -b",
-    "lint": "eslint src",
+    "lint": "eslint src/**/*.ts",
     "prepare": "yarn build",
     "prepublishOnly": "yarn lint && yarn typecheck",
     "test": "vitest",
@@ -24,24 +24,30 @@
     "typecheck": "tsc"
   },
   "devDependencies": {
-    "@remix-run/eslint-config": "^1.7.2",
-    "@remix-run/node": "^1.7.2",
-    "@remix-run/server-runtime": "^1.7.2",
+    "@typescript-eslint/eslint-plugin": "^8.32.0",
+    "@typescript-eslint/parser": "^8.32.0",
     "esbuild": "^0.15.10",
     "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^4.3.4",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "np": "7.6.3",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^4.8.4",
+    "react-router": "^7.0.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.0",
     "vite": "^3.1.7",
     "vitest": "^0.24.1",
     "zod": "^3.19.1"
   },
   "peerDependencies": {
-    "@remix-run/server-runtime": "1.x || 2.x",
-    "zod": "3.x"
+    "react-router": "^7.0.0",
+    "zod": "^3.0.0"
   },
   "publishConfig": {
     "access": "public",

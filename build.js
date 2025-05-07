@@ -4,5 +4,5 @@ require('esbuild').buildSync({
   external: ['zod', '@remix-run/server-runtime'],
   outfile: 'dist/index.js',
   platform: 'node',
-  target: ['node16'],
+  target: ['node20'],
 });
