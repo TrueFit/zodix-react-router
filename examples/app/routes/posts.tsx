@@ -1,6 +1,6 @@
-import { useCatch, useLoaderData } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
-import { zx } from "../../../../src/index";
+import { isRouteErrorResponse, useLoaderData } from "react-router";
+import { zx } from "../../../src/index";
+import type { Route } from "./+types";
 
 async function getPost(postId: number) {
   return Promise.resolve({
@@ -10,7 +10,7 @@ async function getPost(postId: number) {
   });
 }
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params }: Route.ClientLoaderArgs) {
   // try {
   const { postId } = zx.parseParams(
     params,
@@ -35,7 +35,23 @@ export default function PostPage() {
 }
 
 // Catch the error response thrown by Zodix when parsing fails.
-export function CatchBoundary() {
-  const caught = useCatch();
-  return <h1>Caught error: {caught.statusText}</h1>;
+export function CatchBoundary({ error }: Route.ErrorBoundaryProps) {
+  if (isRouteErrorResponse(error)) {
+    return (
+      <h1>
+        Caught error: {error.status} {error.statusText}
+      </h1>
+    );
+  } else if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  } else {
+    return <h1>Unknown Error</h1>;
+  }
 }

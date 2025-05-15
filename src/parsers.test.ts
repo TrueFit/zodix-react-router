@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { LoaderArgs } from '@remix-run/server-runtime';
-import type { ZodEffects, ZodObject, ZodRawShape } from 'zod';
-import { FormData, NodeOnDiskFile, Request } from '@remix-run/node';
 import { z } from 'zod';
 import { zx } from './';
 
-type Params = LoaderArgs['params'];
+type Params = Record<string, string | undefined>;
+
+// this mimics an old class from Remix
+class NodeOnDiskFile extends File {
+  public type: string;
+
+  constructor(public filepath: string, type: string, public slicer?: unknown) {
+    super([], filepath, { type });
+    this.type = type;
+  }
+}
 
 describe('parseParams', () => {
   type Result = { id: string; age: number };
@@ -429,17 +436,23 @@ describe('parseForm', () => {
 
   test('throws for invalid FormData using an object', async () => {
     const badRequest = createFormRequest('notanumber');
-    await expect(zx.parseForm(badRequest, objectSchema)).rejects.toBeInstanceOf(Response)
+    await expect(zx.parseForm(badRequest, objectSchema)).rejects.toBeInstanceOf(
+      Response
+    );
   });
 
   test('throws for invalid FormData using a schema', async () => {
     const badRequest = createFormRequest('notanumber');
-    await expect(zx.parseForm(badRequest, zodSchema)).rejects.toBeInstanceOf(Response)
+    await expect(zx.parseForm(badRequest, zodSchema)).rejects.toBeInstanceOf(
+      Response
+    );
   });
 
   test('throws for invalid FormData using an async schema', async () => {
     const badRequest = createFormRequest('notanumber');
-    await expect(zx.parseForm(badRequest, asyncSchema)).rejects.toBeInstanceOf(Response)
+    await expect(zx.parseForm(badRequest, asyncSchema)).rejects.toBeInstanceOf(
+      Response
+    );
   });
 });
 

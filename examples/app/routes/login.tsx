@@ -1,7 +1,7 @@
-import { Form, useActionData } from "@remix-run/react";
-import { ActionArgs, json } from "@remix-run/server-runtime";
+import { Form, useActionData } from "react-router";
 import { z, ZodError } from "zod";
 import { zx } from "../../../src";
+import type { Route } from "./+types";
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -15,17 +15,17 @@ function errorAtPath(error: ZodError, path: string) {
   return error.issues.find((issue) => issue.path[0] === path)?.message;
 }
 
-export async function action(args: ActionArgs) {
+export async function action(args: Route.ClientActionArgs) {
   const result = await zx.parseFormSafe(args.request, schema);
   if (result.success) {
-    return json({ success: true, emailError: null, passwordError: null });
+    return { success: true, emailError: null, passwordError: null };
   }
   // Get the error messages and return them to the client.
-  return json({
+  return {
     success: false,
     emailError: errorAtPath(result.error, "email"),
     passwordError: errorAtPath(result.error, "password"),
-  });
+  };
 }
 
 export default function Login() {

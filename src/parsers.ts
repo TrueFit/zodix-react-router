@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { createErrorResponse } from './errors';
-import type { DataFunctionArgs } from '@remix-run/server-runtime';
 import type {
   output,
   SafeParseReturnType,
@@ -9,7 +8,7 @@ import type {
   ZodTypeAny,
 } from 'zod';
 
-type Params = DataFunctionArgs['params'];
+type Params = Record<string, string | undefined>;
 
 type Options<Parser = SearchParamsParser> = {
   /** Custom error message for when the validation fails. */
@@ -26,7 +25,7 @@ type Options<Parser = SearchParamsParser> = {
  */
 const isZodType = (input: ZodRawShape | ZodTypeAny): input is ZodTypeAny => {
   return typeof input.parse === 'function';
-}
+};
 
 /**
  * Generic return type for parseX functions.
@@ -60,7 +59,7 @@ export function parseParams<T extends ZodRawShape | ZodTypeAny>(
   try {
     const finalSchema = isZodType(schema) ? schema : z.object(schema);
     return finalSchema.parse(params);
-  } catch (error) {
+  } catch {
     throw createErrorResponse(options);
   }
 }
@@ -97,7 +96,7 @@ export function parseQuery<T extends ZodRawShape | ZodTypeAny>(
     const params = parseSearchParams(searchParams, options?.parser);
     const finalSchema = isZodType(schema) ? schema : z.object(schema);
     return finalSchema.parse(params);
-  } catch (error) {
+  } catch {
     throw createErrorResponse(options);
   }
 }
@@ -129,6 +128,7 @@ export function parseQuerySafe<T extends ZodRawShape | ZodTypeAny>(
  */
 export async function parseForm<
   T extends ZodRawShape | ZodTypeAny,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Parser extends SearchParamsParser<any>
 >(
   request: Request | FormData,
@@ -142,7 +142,7 @@ export async function parseForm<
     const data = await parseFormData(formData, options?.parser);
     const finalSchema = isZodType(schema) ? schema : z.object(schema);
     return await finalSchema.parseAsync(data);
-  } catch (error) {
+  } catch {
     throw createErrorResponse(options);
   }
 }
@@ -155,6 +155,7 @@ export async function parseForm<
  */
 export async function parseFormSafe<
   T extends ZodRawShape | ZodTypeAny,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Parser extends SearchParamsParser<any>
 >(
   request: Request | FormData,
@@ -197,6 +198,7 @@ function parseFormData(formData: FormData, customParser?: SearchParamsParser) {
     formData.set(key, JSON.stringify(value));
   });
   // Context on `as any` usage: https://github.com/microsoft/TypeScript/issues/30584
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return parseSearchParams(new URLSearchParams(formData as any), customParser);
 }
 
@@ -250,7 +252,7 @@ function isFormData(value: unknown): value is FormData {
  * Check if value is an instance of URLSearchParams.
  * This is a workaround for `instanceof` to support multiple platforms.
  */
-function isURLSearchParams(value: unknown): value is FormData {
+function isURLSearchParams(value: unknown): value is URLSearchParams {
   return getObjectTypeName(value) === 'URLSearchParams';
 }
 
