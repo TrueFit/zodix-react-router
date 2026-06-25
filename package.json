@@ -1,6 +1,6 @@
 {
   "name": "@zreott-tf/zodix-react-router",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Parse React Router loaders and actions with Zod",
   "main": "dist/index.js",
   "files": [
