@@ -1,17 +1,13 @@
 {
-  "name": "zodix",
-  "version": "0.4.4",
+  "name": "@zreott-tf/zodix-react-router",
+  "version": "0.0.1",
   "description": "Parse React Router loaders and actions with Zod",
   "main": "dist/index.js",
   "files": [
     "dist"
   ],
-  "repository": "rileytomasek/zodix",
-  "author": {
-    "name": "Riley Tomasek",
-    "email": "hi@rile.yt",
-    "url": "https://rile.yt"
-  },
+  "repository": "TrueFit/zodix-react-router",
+  "author": "Truefit.io",
   "license": "MIT",
   "private": false,
   "scripts": {
