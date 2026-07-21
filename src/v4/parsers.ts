@@ -1,12 +1,12 @@
-import { z } from 'zod/v3';
-import { createErrorResponse } from './errors';
+import { z } from 'zod/v4';
+import { createErrorResponse } from '../errors';
 import type {
   output,
-  SafeParseReturnType,
   ZodObject,
   ZodRawShape,
+  ZodSafeParseResult,
   ZodTypeAny,
-} from 'zod/v3';
+} from 'zod/v4';
 
 type Params = Record<string, string | undefined>;
 
@@ -40,9 +40,9 @@ type ParsedData<T extends ZodRawShape | ZodTypeAny> = T extends ZodTypeAny
  * Generic return type for parseXSafe functions.
  */
 type SafeParsedData<T extends ZodRawShape | ZodTypeAny> = T extends ZodTypeAny
-  ? SafeParseReturnType<z.infer<T>, ParsedData<T>>
+  ? ZodSafeParseResult<ParsedData<T>>
   : T extends ZodRawShape
-  ? SafeParseReturnType<ZodObject<T>, ParsedData<T>>
+  ? ZodSafeParseResult<ParsedData<T>>
   : never;
 
 /**
@@ -58,7 +58,7 @@ export function parseParams<T extends ZodRawShape | ZodTypeAny>(
 ): ParsedData<T> {
   try {
     const finalSchema = isZodType(schema) ? schema : z.object(schema);
-    return finalSchema.parse(params);
+    return finalSchema.parse(params) as ParsedData<T>;
   } catch {
     throw createErrorResponse(options);
   }
@@ -95,7 +95,7 @@ export function parseQuery<T extends ZodRawShape | ZodTypeAny>(
       : getSearchParamsFromRequest(request);
     const params = parseSearchParams(searchParams, options?.parser);
     const finalSchema = isZodType(schema) ? schema : z.object(schema);
-    return finalSchema.parse(params);
+    return finalSchema.parse(params) as ParsedData<T>;
   } catch {
     throw createErrorResponse(options);
   }
@@ -141,7 +141,7 @@ export async function parseForm<
       : await request.clone().formData();
     const data = await parseFormData(formData, options?.parser);
     const finalSchema = isZodType(schema) ? schema : z.object(schema);
-    return await finalSchema.parseAsync(data);
+    return (await finalSchema.parseAsync(data)) as ParsedData<T>;
   } catch {
     throw createErrorResponse(options);
   }
