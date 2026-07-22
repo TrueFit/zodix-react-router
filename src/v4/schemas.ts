@@ -1,4 +1,4 @@
-import { z } from 'zod/v3';
+import { z } from 'zod/v4';
 
 /**
  * Zod schema to parse strings that are booleans.

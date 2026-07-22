@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { z } from 'zod/v3';
+import { z } from 'zod/v4';
 import { zx } from './';
 
 type Params = Record<string, string | undefined>;
